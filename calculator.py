@@ -1,5 +1,4 @@
 import csv
-import numpy as np
 from typing import NewType, Tuple, Dict, List
 
 PairwiseSample = Tuple[int, int]
@@ -7,7 +6,7 @@ CandyId = NewType('CandyId', int)
 CandyIdDict = NewType('CandyIdDict', Dict[CandyId, int])
 CandyTuple = NewType('CandyTuple', Tuple[CandyId, CandyId])
 CandyTupleList = NewType('CandyTupleList', List[CandyTuple])
-CandyTupleDict = NewType('CandyTupleDict', Dict[CandyTuple, PairwiseSample])
+CandyTuplePairwiseSampleDict = NewType('CandyTuplePairwiseSampleDict', Dict[CandyTuple, PairwiseSample])
 
 class CandyDatabase:
 	__candies = [
@@ -60,13 +59,10 @@ class CollectiveStatistics:
 	def lookup(self, id : CandyId) -> int:
 		return self.__dict[id]
 
-	def lookupTuple(self, tuple : CandyTuple) -> PairwiseSample:
-		return (self.lookup(tuple[0]), self.lookup(tuple[1]))
-
 
 class PairwiseStatistics:
 	def __init__(self):
-		self.__dict = CandyTupleDict({})
+		self.__dict = CandyTuplePairwiseSampleDict({})
 
 	def __normalizeTuple(pair: CandyTuple) -> CandyTuple:
 		if pair[0] > pair[1]:
@@ -93,21 +89,29 @@ class PairwiseStatistics:
 		return sorted(list(self.__dict.keys()))
 
 
-class TransitivityDeviationCalculator:
+class ChoiceAxiomDeviationCalculator:
 	def __init__(self, col_stats : CollectiveStatistics, pair_stats : PairwiseStatistics):
 		self.__col_stats = col_stats
 		self.__pair_stats = pair_stats
 
 	def lookup(self, key : CandyTuple) -> float:
 		pair_a, pair_b = self.__pair_stats.lookup(key)
-		col_a, col_b = self.__col_stats.lookupTuple(key)
+
+		col_a = self.__col_stats.lookup(key[0])
+		col_b = self.__col_stats.lookup(key[1])
 
 		pair_total = pair_a + pair_b
 		col_total = col_a + col_b
 
-		bias = (pair_a / pair_total) - (col_a / col_total)
+		# see formula 1.9 in Rapoport 1989 Ch. 1
+		# likelihood of option a being chosen when the subset {a, b} is presented
+		pAx = (pair_a / pair_total)
+		# likelihood of a or b being chosen when entire selection is presented
+		pTA = col_total / self.__col_stats.total()
+		# likelihood of option a being chosen when entire selection is presented
+		pTx = col_a / self.__col_stats.total()
 
-		return bias
+		return pTx - pAx * pTA
 
 def csv_parser(filename : str) -> (CollectiveStatistics, PairwiseStatistics):
 	col_stats = CollectiveStatistics()
@@ -133,7 +137,7 @@ def csv_parser(filename : str) -> (CollectiveStatistics, PairwiseStatistics):
 def main():
 	col_stats, pair_stats = csv_parser('data.csv')
 
-	trans_dev_calc = TransitivityDeviationCalculator(col_stats, pair_stats)
+	trans_dev_calc = ChoiceAxiomDeviationCalculator(col_stats, pair_stats)
 
 	for key in pair_stats.keys():
 
