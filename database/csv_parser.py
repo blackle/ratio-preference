@@ -30,7 +30,7 @@ class CSVParser(GenericParser):
 				self.__key_list += split
 			except AssertionError:
 				continue
-		self.__key_list = list(set(self.__key_list))
+		self.__key_list = sorted(list(set(self.__key_list)))
 
 	def __process_collective_list(self) -> None:
 		reader = self.__new_reader()
