@@ -1,2 +1,3 @@
-from .preference_database import EntityName, EntityId, EntityIdList, EntityIdTuple, EntityIdTupleList, EntityIdListTupleDict, PreferenceDatabase
-from .csv_reader import CSVReader, CSVField, CSVRow, CSVFieldCallback, CSVRowCallback
+from .preference_database import EntityId, EntityIdList, EntityIdTuple, EntityIdTupleList, EntityIdListTupleDict, PreferenceDatabase
+from .generic_parser import EntityName, EntityNameList, EntityNameTuple, EntityNameListTupleDict, GenericParser
+from .csv_parser import CSVParser

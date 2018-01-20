@@ -1,9 +1,5 @@
 from typing import List, NewType, Tuple, Dict
-
-EntityName = NewType("EntityName", str)
-EntityNameList = List[EntityName]
-EntityNameTuple = Tuple[EntityName, EntityName]
-EntityNameListTupleDict = Dict[EntityNameTuple, EntityNameList]
+from database.generic_parser import EntityName, EntityNameList, EntityNameTuple, EntityNameListTupleDict
 
 EntityId = NewType('EntityId', int)
 EntityIdList = List[EntityId]
@@ -24,10 +20,10 @@ class PreferenceDatabase:
 			key_id = self.__normalize_tuple(key_id)
 			self.__pairwise[key_id] = []
 
-			for observation in pair_dict[key]:
-				observation_id = self.id_for_name(observation)
-				assert observation_id == key_id[0] or observation_id == key_id[1]
-				self.__pairwise[key_id].append(observation_id)
+			for entity in pair_dict[key]:
+				entity_id = self.id_for_name(entity)
+				assert entity_id == key_id[0] or entity_id == key_id[1]
+				self.__pairwise[key_id].append(entity_id)
 
 	def __normalize_tuple(self, pair: EntityIdTuple) -> EntityIdTuple:
 		if pair[0] > pair[1]:

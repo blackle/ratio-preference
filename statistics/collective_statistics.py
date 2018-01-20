@@ -1,5 +1,5 @@
 from typing import NewType, Dict
-from database import EntityId, EntityName, PreferenceDatabase
+from database import EntityId, PreferenceDatabase
 
 class CollectiveStatistics:
 	def __init__(self, db : PreferenceDatabase) -> None:
@@ -21,6 +21,8 @@ class CollectiveStatistics:
 
 
 def __collective_statistics_test() -> None:
+	from database import EntityName
+
 	e0 = EntityName("Dr. Peepo")
 	e1 = EntityName("Pepis")
 	e2 = EntityName("RC Squampy")

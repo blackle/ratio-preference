@@ -1,5 +1,5 @@
 from typing import NewType, Dict, Tuple
-from database import EntityId, EntityIdTuple, EntityIdTupleList, EntityIdListTupleDict, EntityName, PreferenceDatabase
+from database import EntityId, EntityIdTuple, EntityIdTupleList, EntityIdListTupleDict, PreferenceDatabase
 
 PairwiseStat = NewType("PairwiseStat", Tuple[int, int])
 PairwiseStatsDict = Dict[EntityIdTuple, PairwiseStat]
@@ -31,6 +31,8 @@ class PairwiseStatistics:
 
 
 def __pairwise_statistics_test() -> None:
+	from database import EntityName
+
 	e0 = EntityName("Dr. Peepo")
 	e1 = EntityName("Pepis")
 	e2 = EntityName("RC Squampy")
