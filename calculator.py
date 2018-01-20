@@ -1,11 +1,14 @@
 import csv
 from typing import NewType, Tuple, Dict, List
+from typedefs import CandyId, CandyTuple, CandyTupleList
+from statistics import CollectiveStatistics
+from parsers import CSVReader, CSVField, CSVFieldCallback
 
 PairwiseSample = Tuple[int, int]
-CandyId = NewType('CandyId', int)
+# CandyId = NewType('CandyId', int)
 CandyIdDict = NewType('CandyIdDict', Dict[CandyId, int])
-CandyTuple = NewType('CandyTuple', Tuple[CandyId, CandyId])
-CandyTupleList = NewType('CandyTupleList', List[CandyTuple])
+# CandyTuple = NewType('CandyTuple', Tuple[CandyId, CandyId])
+# CandyTupleList = NewType('CandyTupleList', List[CandyTuple])
 CandyTuplePairwiseSampleDict = NewType('CandyTuplePairwiseSampleDict', Dict[CandyTuple, PairwiseSample])
 
 class CandyDatabase:
@@ -41,23 +44,23 @@ class CandyDatabase:
 		return "{0} or {1}?".format(candy_a, candy_b)
 
 
-class CollectiveStatistics:
-	def __init__(self):
-		self.__dict = CandyIdDict({})
-		self.__total = 0
+# class CollectiveStatistics:
+# 	def __init__(self):
+# 		self.__dict = CandyIdDict({})
+# 		self.__total = 0
 
-		for id in CandyDatabase.candyIds():
-			self.__dict[id] = 0
+# 		for id in CandyDatabase.candyIds():
+# 			self.__dict[id] = 0
 
-	def processSample(self, winner : CandyId) -> None:
-		self.__total += 1
-		self.__dict[winner] += 1
+# 	def processSample(self, winner : CandyId) -> None:
+# 		self.__total += 1
+# 		self.__dict[winner] += 1
 
-	def total(self) -> int:
-		return self.__total
+# 	def total(self) -> int:
+# 		return self.__total
 
-	def lookup(self, id : CandyId) -> int:
-		return self.__dict[id]
+# 	def lookup(self, id : CandyId) -> int:
+# 		return self.__dict[id]
 
 
 class PairwiseStatistics:
@@ -89,8 +92,9 @@ class PairwiseStatistics:
 		return sorted(list(self.__dict.keys()))
 
 
+# Luce's choice axiom, not the axiom of choice
 class ChoiceAxiomDeviationCalculator:
-	def __init__(self, col_stats : CollectiveStatistics, pair_stats : PairwiseStatistics):
+	def __init__(self, col_stats : CollectiveStatistics, pair_stats : PairwiseStatistics) -> None:
 		self.__col_stats = col_stats
 		self.__pair_stats = pair_stats
 
@@ -113,7 +117,8 @@ class ChoiceAxiomDeviationCalculator:
 
 		return pTx - pAx * pTA
 
-def csv_parser(filename : str) -> (CollectiveStatistics, PairwiseStatistics):
+
+def csv_parser(filename : str) -> Tuple[CollectiveStatistics, PairwiseStatistics]:
 	col_stats = CollectiveStatistics()
 	pair_stats = PairwiseStatistics()
 
