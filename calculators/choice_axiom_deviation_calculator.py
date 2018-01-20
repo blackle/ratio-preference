@@ -1,6 +1,5 @@
-import csv
 from statistics import CollectiveStatistics, PairwiseStatistics
-from database import PreferenceDatabase, PreferenceDatabaseBuilder, CSVParser, EntityId, EntityIdTuple
+from database import EntityId, EntityIdTuple
 
 # Luce's choice axiom, not the axiom of choice
 class ChoiceAxiomDeviationCalculator:
@@ -25,10 +24,12 @@ class ChoiceAxiomDeviationCalculator:
 		# likelihood of option a being chosen when entire selection is presented
 		pTx = col_a / self.__col_stats.total()
 
-		return pTx - pAx * pTA
+		return abs(pTx - pAx * pTA)
 
 
-def main():
+if __name__ == "__main__":
+	from database import PreferenceDatabase, PreferenceDatabaseBuilder, CSVParser
+
 	db = None #type: PreferenceDatabase
 	with open("data.csv", 'r') as file:
 
@@ -41,8 +42,5 @@ def main():
 	ca_dev_calc = ChoiceAxiomDeviationCalculator(col_stats, pair_stats)
 
 	for key in pair_stats.keys():
-		print(db.name_for_id(key[0]) + " or " + db.name_for_id(key[1]))
+		print(db.name_for_id(key[0]) + " or " + db.name_for_id(key[1]) + "?")
 		print(ca_dev_calc.lookup(key))
-
-if __name__ == "__main__":
-	main()
