@@ -2,7 +2,7 @@ from calculators import ChoiceAxiomDeviationCalculator
 from statistics import CollectiveStatistics, PairwiseStatistics
 from database import PreferenceDatabase, PreferenceDatabaseBuilder, CSVParser, EntityId, EntityIdTuple
 
-def main():
+def main() -> None:
 	db = None #type: PreferenceDatabase
 	with open("data.csv", 'r') as file:
 
