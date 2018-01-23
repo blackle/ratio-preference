@@ -58,7 +58,7 @@ class ChoiceAxiomViolationProbabilityCalculator:
 		distro_mean = np.mean(distro_samples)
 		distro_std = np.std(distro_samples)
 
-		distance_to_mean = abs((distro_mean - 0)/distro_std)
+		distance_to_mean = (distro_mean - 0)/distro_std
 
 		return distance_to_mean
 
@@ -79,7 +79,7 @@ if __name__ == "__main__":
 	pair_stats = PairwiseStatistics(db)
 	ca_vprob_calc = ChoiceAxiomViolationProbabilityCalculator(col_stats, pair_stats)
 
-	total = 1
+	total = 1.0
 
 	for key in pair_stats.keys():
 		print(db.name_for_id(key[0]) + " or " + db.name_for_id(key[1]) + "?")
